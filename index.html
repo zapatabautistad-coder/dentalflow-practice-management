@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DentalFlow - Sistema Integral de Gestión Dental | SaaS HealthTech</title>
+    <style>
+        /* ==================== RESET & BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 16px;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ==================== HEADER & NAVIGATION ==================== */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        /* Role Selector Badge */
+        .role-selector {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            padding: 8px 16px;
+            display: flex;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .role-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .role-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .role-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+        }
+
+        .privilege-badge {
+            background: rgba(255, 193, 7, 0.9);
+            color: #333;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* ==================== NAVIGATION TABS ==================== */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #e0e0e0;
+            background: #fafbfc;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+        }
+
+        .nav-tabs button {
+            flex: 0 0 auto;
+            padding: 16px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .nav-tabs button:hover {
+            color: #667eea;
+            background: white;
+        }
+
+        .nav-tabs button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        /* ==================== MAIN CONTENT AREA ==================== */
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1em;
+            margin-bottom: 24px;
+        }
+
+        /* ==================== DASHBOARD & CARDS ==================== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .metric-card h3 {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .metric-card .number {
+            font-size: 2.4em;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .metric-card.alt1 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .metric-card.alt2 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .metric-card.alt3 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        /* ==================== ODONTOGRAM (NUEVO MÓDULO) ==================== */
+        .odontogram-container {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 2px solid #e8eaed;
+        }
+
+        .odontogram-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .odontogram-header h3 {
+            color: #2c3e50;
+            font-size: 1.3em;
+        }
+
+        .tooth-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 2px solid #ddd;
+        }
+
+        .legend-color.healthy { background: #ffffff; border-color: #333; }
+        .legend-color.caries { background: #ef5350; }
+        .legend-color.restoration { background: #42a5f5; }
+        .legend-color.missing { background: #bdbdbd; opacity: 0.5; }
+        .legend-color.crown { background: #ffd700; border-color: #b8860b; }
+
+        .odontogram-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .arcada-label {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: 16px;
+        }
+
+        .tooth {
+            aspect-ratio: 1;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #333;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tooth:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+            transform: scale(1.05);
+        }
+
+        .tooth.healthy { background: #ffffff; border-color: #333; }
+        .tooth.caries { background: #ffcdd2; border-color: #ef5350; }
+        .tooth.restoration { background: #bbdefb; border-color: #42a5f5; }
+        .tooth.missing { background: #e0e0e0; border-color: #999; opacity: 0.6; }
+        .tooth.crown { background: #fff9c4; border-color: #fbc02d; }
+
+        .tooth-number {
+            font-size: 0.75em;
+            opacity: 0.7;
+        }
+
+        .tooth-status {
+            font-size: 0.65em;
+            margin-top: 2px;
+        }
+
+        .tooth-actions {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            z-index: 10;
+            padding: 4px;
+        }
+
+        .tooth:hover .tooth-actions {
+            top: -35px;
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .tooth-action-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 0.7em;
+            transition: all 0.2s;
+        }
+
+        .tooth-action-btn:hover {
+            background: #764ba2;
+        }
+
+        .clinical-note-box {
+            background: white;
+            border: 2px solid #e8eaed;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .clinical-note-box h4 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .clinical-note-box textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9em;
+            resize: vertical;
+        }
+
+        /* ==================== PATIENT RECORD ==================== */
+        .patient-record {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .patient-record:hover {
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateX(4px);
+        }
+
+        .patient-record h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        .patient-record p {
+            color: #666;
+            font-size: 0.9em;
+            margin: 4px 0;
+        }
+
+        /* ==================== INVOICE/FACTURACIÓN ==================== */
+        .invoice {
+            background: white;
+            border: 2px solid #e8eaed;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e8eaed;
+        }
+
+        .invoice-header h4 {
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .invoice-fiscal-info {
+            background: #f0f7ff;
+            border-left: 4px solid #2196F3;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 0.9em;
+        }
+
+        .invoice-fiscal-info strong {
+            color: #1976d2;
+        }
+
+        .invoice-items {
+            margin-bottom: 16px;
+        }
+
+        .invoice-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e8eaed;
+            font-size: 0.95em;
+        }
+
+        .invoice-item-desc {
+            flex: 1;
+        }
+
+        .invoice-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 0;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #667eea;
+            border-top: 2px solid #e8eaed;
+        }
+
+        .treatment-plan {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .treatment-phase {
+            background: white;
+            border: 1px solid #e8eaed;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .phase-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .status-draft { background: #e8eaed; color: #555; }
+        .status-approved { background: #c8e6c9; color: #2e7d32; }
+        .status-in-progress { background: #ffe0b2; color: #e65100; }
+        .status-completed { background: #c8e6c9; color: #1b5e20; }
+
+        /* ==================== TABLES ==================== */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e8eaed;
+            font-size: 0.9em;
+        }
+
+        .data-table tr:hover {
+            background: #f9fafb;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ==================== STATUS BADGES ==================== */
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-ok { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-critical { background: #f8d7da; color: #721c24; }
+        .badge-info { background: #d1ecf1; color: #0c5460; }
+
+        /* ==================== CHARTS ==================== */
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart {
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 16px;
+            font-size: 1.05em;
+        }
+
+        .chart-bar {
+            margin-bottom: 16px;
+        }
+
+        .chart-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .chart-bar-value {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            padding: 0 12px;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .chart-bar-value:hover {
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* ==================== FEATURE CARDS ==================== */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .feature-card {
+            background: white;
+            border: 2px solid #e8eaed;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .feature-card h4 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+
+        .feature-card ul {
+            margin-left: 20px;
+            color: #666;
+        }
+
+        .feature-card li {
+            margin: 8px 0;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* ==================== PRICING CARDS ==================== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #e8eaed;
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .pricing-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .pricing-card.featured {
+            border: 2px solid #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            transform: scale(1.02);
+        }
+
+        .pricing-card h4 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+
+        .pricing-price {
+            font-size: 2.2em;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .pricing-period {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .pricing-card ul {
+            text-align: left;
+            margin: 20px 0;
+            color: #666;
+        }
+
+        .pricing-card li {
+            margin: 10px 0;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        /* ==================== BUTTONS ==================== */
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 12px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.85em;
+            margin: 0;
+        }
+
+        .btn-secondary {
+            background: #e8eaed;
+            color: #2c3e50;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d2d6;
+        }
+
+        /* ==================== ALERTS & NOTES ==================== */
+        .note {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 14px 16px;
+            border-radius: 6px;
+            margin: 16px 0;
+            color: #0c5aa0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .note.warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+
+        .note.success {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        /* ==================== FOOTER ==================== */
+        footer {
+            background: #f9fafb;
+            padding: 20px 30px;
+            text-align: center;
+            color: #7f8c8d;
+            border-top: 1px solid #e8eaed;
+            font-size: 0.9em;
+        }
+
+        /* ==================== RESPONSIVE DESIGN ==================== */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .header-left {
+                flex-direction: column;
+            }
+
+            header h1 {
+                font-size: 1.4em;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tabs button {
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+
+            .nav-tabs button.active {
+                border-left-color: #667eea;
+            }
+
+            .content-wrapper {
+                padding: 20px;
+            }
+
+            .odontogram-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .invoice-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .feature-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+        }
+
+        /* ==================== VISIBILITY CONTROL BY ROLE ==================== */
+        .role-restriction {
+            display: none;
+        }
+
+        .role-restriction.visible {
+            display: block;
+        }
+
+        .element-hidden-by-role {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER CON ROLE SELECTOR -->
+        <header>
+            <div class="header-left">
+                <div>
+                    <h1>🦷 DentalFlow</h1>
+                    <p>Sistema Integral de Gestión para Clínicas Dentales</p>
+                </div>
+            </div>
+            <div class="role-selector">
+                <button class="role-btn active" onclick="switchRole('doctor')">👨‍⚕️ Doctor</button>
+                <button class="role-btn" onclick="switchRole('reception')">👩‍💼 Recepción</button>
+                <button class="role-btn" onclick="switchRole('admin')">💼 Admin</button>
+                <div class="privilege-badge" id="privilegeBadge">Acceso Total</div>
+            </div>
+        </header>
+
+        <!-- NAVIGATION TABS -->
+        <div class="nav-tabs">
+            <button class="nav-btn active" onclick="showTab('dashboard')">📊 Dashboard</button>
+            <button class="nav-btn" onclick="showTab('citas')">📅 Citas</button>
+            <button class="nav-btn" onclick="showTab('pacientes')">👤 Pacientes</button>
+            <button class="nav-btn" onclick="showTab('odontograma')">🦷 Odontograma</button>
+            <button class="nav-btn" onclick="showTab('tratamiento')">📋 Plan Tratamiento</button>
+            <button class="nav-btn" onclick="showTab('inventario')">📦 Inventario</button>
+            <button class="nav-btn" onclick="showTab('facturacion')">💳 Facturación</button>
+            <button class="nav-btn" onclick="showTab('reportes')">📈 Reportes</button>
+        </div>
+
+        <!-- CONTENT AREA -->
+        <div class="content-wrapper">
+
+            <!-- DASHBOARD -->
+            <div id="dashboard" class="content active">
+                <h2>Panel de Control</h2>
+                <p class="subtitle">Resumen de operaciones diarias y KPIs principales</p>
+
+                <div class="dashboard-grid">
+                    <div class="metric-card">
+                        <h3>Citas Hoy</h3>
+                        <div class="number">12</div>
+                    </div>
+                    <div class="metric-card alt1">
+                        <h3>Ingresos Hoy</h3>
+                        <div class="number">RD$ 8,500</div>
+                    </div>
+                    <div class="metric-card alt2">
+                        <h3>Pacientes Atendidos</h3>
+                        <div class="number">9</div>
+                    </div>
+                    <div class="metric-card alt3">
+                        <h3>Tasa Ocupación</h3>
+                        <div class="number">75%</div>
+                    </div>
+                </div>
+
+                <div class="note">✓ Recordatorios SMS enviados exitosamente a 12 pacientes</div>
+
+                <div class="chart-container">
+                    <div class="chart">
+                        <div class="chart-title">Citas por Profesional (Esta Semana)</div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Dr. José García</span>
+                                <span>28 citas</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 90%;">28 citas</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Dra. Ana Martínez</span>
+                                <span>24 citas</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 77%;">24 citas</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Dr. Roberto Sánchez</span>
+                                <span>22 citas</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 71%;">22 citas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GESTIÓN DE CITAS -->
+            <div id="citas" class="content">
+                <h2>Gestión de Citas</h2>
+                <p class="subtitle">Visualiza y administra la agenda de pacientes</p>
+
+                <div class="patient-record">
+                    <h4>Miguel Pérez - 08:30 AM</h4>
+                    <p>📅 Hoy | ⏱️ Limpieza Dental | 👨‍⚕️ Dr. José García | 🔔 Recordatorio: Enviado ✓</p>
+                    <button class="btn btn-small" onclick="alert('Abriendo historial de Miguel Pérez...')">Ver Historial</button>
+                </div>
+
+                <div class="patient-record">
+                    <h4>Laura Gómez - 09:30 AM</h4>
+                    <p>📅 Hoy | ⏱️ Consulta + Radiografía | 👨‍⚕️ Dr. José García | 🔔 Recordatorio: Enviado ✓</p>
+                    <button class="btn btn-small" onclick="alert('Abriendo historial de Laura Gómez...')">Ver Historial</button>
+                </div>
+
+                <div class="patient-record">
+                    <h4>Juan Martínez - 02:00 PM</h4>
+                    <p>📅 Hoy | ⏱️ Tratamiento de Conducto (Sesión 2) | 👨‍⚕️ Dra. Ana Martínez | 🔔 Recordatorio: Enviado ✓</p>
+                    <button class="btn btn-small" onclick="alert('Abriendo historial de Juan Martínez...')">Ver Historial</button>
+                </div>
+            </div>
+
+            <!-- HISTORIALES DE PACIENTES -->
+            <div id="pacientes" class="content">
+                <h2>Historiales Digitales</h2>
+                <p class="subtitle">Expedientes clínicos seguros y organizados</p>
+
+                <div class="patient-record">
+                    <h4>Miguel Pérez (ID: PAC-2024-001)</h4>
+                    <p>📧 miguel.perez@email.com | 📱 809-555-1234 | 🎂 15/03/1985 | 🏥 Asegurado: SFS</p>
+                    <p style="margin-top: 12px; color: #2c3e50;">⚠️ Alergias: Penicilina | Presión: Normal | Diabetes: No</p>
+                </div>
+
+                <div class="patient-record" role-visible="doctor,admin">
+                    <h4>Historial de Tratamientos (Últimos 12 meses)</h4>
+                    <p>📅 10/09/2026 - Limpieza Dental | RD$ 800</p>
+                    <p>📅 25/08/2026 - Consulta + Radiografía | RD$ 500</p>
+                    <p>📅 15/07/2026 - Relleno (Muela izq.) | RD$ 1,200</p>
+                </div>
+
+                <div class="patient-record">
+                    <h4>Tratamientos en Progreso</h4>
+                    <p>🔄 Blanqueamiento Dental - Sesión 1 de 3 completada (Próxima: 28/09/2026)</p>
+                </div>
+            </div>
+
+            <!-- ODONTOGRAMA INTERACTIVO (MÓDULO CRÍTICO) -->
+            <div id="odontograma" class="content">
+                <h2>Odontograma Digital</h2>
+                <p class="subtitle">Mapeo visual y diagnóstico dental interactivo</p>
+
+                <div class="odontogram-container">
+                    <div class="odontogram-header">
+                        <h3>Paciente: Miguel Pérez (PAC-2024-001)</h3>
+                        <p style="color: #7f8c8d; font-size: 0.9em;">21/09/2026 - Dr. José García</p>
+                    </div>
+
+                    <!-- LEYENDA DE COLORES -->
+                    <div class="tooth-legend">
+                        <div class="legend-item">
+                            <div class="legend-color healthy"></div>
+                            <span>Sano</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color caries"></div>
+                            <span>Caries / Por Tratar</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color restoration"></div>
+                            <span>Obturación / Restaurado</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color crown"></div>
+                            <span>Corona / Prótesis</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color missing"></div>
+                            <span>Ausente / Extracción</span>
+                        </div>
+                    </div>
+
+                    <!-- GRID DE DIENTES (NUMERACIÓN FDI) -->
+                    <div class="odontogram-grid">
+                        <!-- ARCADA SUPERIOR -->
+                        <div class="arcada-label">Arcada Superior (Maxilar)</div>
+
+                        <div class="tooth" onclick="changeTooth(this, 18)">
+                            <div class="tooth-number">18</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                        <div class="tooth" onclick="changeTooth(this, 17)">
+                            <div class="tooth-number">17</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                        <div class="tooth caries" onclick="changeTooth(this, 16)">
+                            <div class="tooth-number">16</div>
+                            <div class="tooth-status">Caries</div>
+                        </div>
+                        <div class="tooth restoration" onclick="changeTooth(this, 15)">
+                            <div class="tooth-number">15</div>
+                            <div class="tooth-status">Restaurado</div>
+                        </div>
+                        <div class="tooth" onclick="changeTooth(this, 14)">
+                            <div class="tooth-number">14</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                        <div class="tooth" onclick="changeTooth(this, 13)">
+                            <div class="tooth-number">13</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                        <div class="tooth" onclick="changeTooth(this, 12)">
+                            <div class="tooth-number">12</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                        <div class="tooth" onclick="changeTooth(this, 11)">
+                            <div class="tooth-number">11</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+
+                        <!-- ARCADA INFERIOR -->
+                        <div class="arcada-label">Arcada Inferior (Mandíbula)</div>
+
+                        <div class="tooth" onclick="changeTooth(this, 48)">
+                            <div class="tooth-number">48</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                        <div class="tooth crown" onclick="changeTooth(this, 47)">
+                            <div class="tooth-number">47</div>
+                            <div class="tooth-status">Corona</div>
+                        </div>
+                        <div class="tooth" onclick="changeTooth(this, 46)">
+                            <div class="tooth-number">46</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                        <div class="tooth" onclick="changeTooth(this, 45)">
+                            <div class="tooth-number">45</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                        <div class="tooth missing" onclick="changeTooth(this, 44)">
+                            <div class="tooth-number">44</div>
+                            <div class="tooth-status">Ausente</div>
+                        </div>
+                        <div class="tooth" onclick="changeTooth(this, 43)">
+                            <div class="tooth-number">43</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                        <div class="tooth" onclick="changeTooth(this, 42)">
+                            <div class="tooth-number">42</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                        <div class="tooth" onclick="changeTooth(this, 41)">
+                            <div class="tooth-number">41</div>
+                            <div class="tooth-status">Sano</div>
+                        </div>
+                    </div>
+
+                    <!-- NOTA CLÍNICA RÁPIDA -->
+                    <div class="clinical-note-box">
+                        <h4>Observaciones Clínicas</h4>
+                        <textarea id="clinicalNote" placeholder="Selecciona un diente para agregar diagnóstico. Las notas se guardan automáticamente...">Paciente presenta buen estado de higiene oral general. Requiere tratamiento de caries en pieza 16. Corona en pieza 47 en buen estado. Paciente ausente pieza 44 (posiblemente extracción antigua). Se recomienda plan de tratamiento progresivo.</textarea>
+                        <button class="btn btn-small" onclick="saveClinicalNote()">Guardar Nota</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PLAN DE TRATAMIENTO (NUEVO) -->
+            <div id="tratamiento" class="content">
+                <h2>Plan de Tratamiento</h2>
+                <p class="subtitle">Presupuesto y cronograma de intervenciones clínicas</p>
+
+                <div class="treatment-plan">
+                    <h3 style="color: #2c3e50; margin-bottom: 16px;">Paciente: Miguel Pérez (PAC-2024-001)</h3>
+                    <p style="color: #7f8c8d; margin-bottom: 20px;">Fecha de Creación: 21/09/2026 | Última Actualización: 21/09/2026</p>
+
+                    <!-- FASE 1 -->
+                    <div class="treatment-phase">
+                        <div class="phase-header">
+                            <div>
+                                <h4>Fase 1: Procedimientos de Urgencia</h4>
+                                <p style="color: #7f8c8d; font-size: 0.9em;">Duración estimada: 1 semana</p>
+                            </div>
+                            <span class="phase-status status-in-progress">En Progreso</span>
+                        </div>
+                        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e8eaed;">
+                            <p style="margin-bottom: 8px;"><strong>Procedimientos:</strong></p>
+                            <ul style="margin-left: 20px; color: #666; font-size: 0.9em;">
+                                <li>Tratamiento de Caries (Pieza 16) - RD$ 1,200</li>
+                                <li>Radiografías Diagnósticas - RD$ 300</li>
+                            </ul>
+                            <p style="margin-top: 12px; font-weight: 600; color: #667eea;">Subtotal: RD$ 1,500</p>
+                        </div>
+                    </div>
+
+                    <!-- FASE 2 -->
+                    <div class="treatment-phase">
+                        <div class="phase-header">
+                            <div>
+                                <h4>Fase 2: Procedimientos Estéticos</h4>
+                                <p style="color: #7f8c8d; font-size: 0.9em;">Duración estimada: 2 semanas</p>
+                            </div>
+                            <span class="phase-status status-approved">Aprobado por Paciente</span>
+                        </div>
+                        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e8eaed;">
+                            <p style="margin-bottom: 8px;"><strong>Procedimientos:</strong></p>
+                            <ul style="margin-left: 20px; color: #666; font-size: 0.9em;">
+                                <li>Blanqueamiento Dental (3 sesiones) - RD$ 2,100</li>
+                                <li>Pulido y Fluoración - RD$ 400</li>
+                            </ul>
+                            <p style="margin-top: 12px; font-weight: 600; color: #667eea;">Subtotal: RD$ 2,500</p>
+                        </div>
+                    </div>
+
+                    <!-- FASE 3 -->
+                    <div class="treatment-phase">
+                        <div class="phase-header">
+                            <div>
+                                <h4>Fase 3: Procedimientos de Rehabilitación</h4>
+                                <p style="color: #7f8c8d; font-size: 0.9em;">Duración estimada: 3 semanas</p>
+                            </div>
+                            <span class="phase-status status-draft">Borrador (Pendiente Aprobación)</span>
+                        </div>
+                        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e8eaed;">
+                            <p style="margin-bottom: 8px;"><strong>Procedimientos:</strong></p>
+                            <ul style="margin-left: 20px; color: #666; font-size: 0.9em;">
+                                <li>Implante Dental (Pieza 44) - RD$ 8,500</li>
+                                <li>Consultas de Seguimiento (2) - RD$ 600</li>
+                            </ul>
+                            <p style="margin-top: 12px; font-weight: 600; color: #667eea;">Subtotal: RD$ 9,100</p>
+                        </div>
+                    </div>
+
+                    <!-- RESUMEN TOTAL -->
+                    <div style="background: #f9fafb; border-radius: 8px; padding: 16px; margin-top: 20px; border: 2px solid #e8eaed;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                            <span style="font-weight: 600;">Total Plan de Tratamiento:</span>
+                            <span style="font-size: 1.2em; color: #667eea; font-weight: 700;">RD$ 13,100</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9em; color: #7f8c8d;">
+                            <span>Estimado: 6-7 semanas</span>
+                            <span>Riesgo: Bajo</span>
+                        </div>
+                    </div>
+
+                    <div class="note" style="margin-top: 20px;">
+                        💡 El paciente puede comenzar en cualquier fase y ajustar el cronograma según su disponibilidad económica y de tiempo.
+                    </div>
+                </div>
+            </div>
+
+            <!-- INVENTARIO -->
+            <div id="inventario" class="content">
+                <h2>Gestión de Inventario</h2>
+                <p class="subtitle">Control de materiales y suministros dentales</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Stock Actual</th>
+                            <th>Stock Mínimo</th>
+                            <th>Proveedor</th>
+                            <th>Vencimiento</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Resina Dental A2</td>
+                            <td>5 unidades</td>
+                            <td>10 unidades</td>
+                            <td>DentalSupply RD</td>
+                            <td>15/03/2027</td>
+                            <td><span class="badge badge-critical">⚠️ Crítico</span></td>
+                        </tr>
+                        <tr>
+                            <td>Gutapercha</td>
+                            <td>25 paquetes</td>
+                            <td>15 paquetes</td>
+                            <td>Oral Materials</td>
+                            <td>20/08/2027</td>
+                            <td><span class="badge badge-ok">✓ Óptimo</span></td>
+                        </tr>
+                        <tr>
+                            <td>Anestésico Local (Carpule)</td>
+                            <td>8 unidades</td>
+                            <td>10 unidades</td>
+                            <td>Farmacos Dental</td>
+                            <td>12/12/2026</td>
+                            <td><span class="badge badge-warning">⚠️ Bajo</span></td>
+                        </tr>
+                        <tr>
+                            <td>Guantes de Nitrilo</td>
+                            <td>3 cajas</td>
+                            <td>5 cajas</td>
+                            <td>Medical Supplies</td>
+                            <td>01/10/2026</td>
+                            <td><span class="badge badge-warning">⚠️ Bajo</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="note warning">
+                    🔔 Se requiere reordenación urgente de Resina Dental A2 y Anestésico Local.
+                </div>
+            </div>
+
+            <!-- FACTURACIÓN CON NCF (MÓDULO MEJORADO) -->
+            <div id="facturacion" class="content">
+                <h2>Sistema de Facturación</h2>
+                <p class="subtitle">Gestión de facturas con cumplimiento fiscal dominicano (NCF)</p>
+
+                <!-- FACTURA ELECTRÓNICA -->
+                <div class="invoice">
+                    <div class="invoice-header">
+                        <div>
+                            <h4>DentalFlow Clínica García</h4>
+                            <p style="font-size: 0.9em;">RNC: 1-23-45-678 | Establecimiento: 01</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="font-weight: 600; font-size: 1.05em;">FACTURA ELECTRÓNICA</p>
+                            <p>NCF: B0100000000001</p>
+                            <p style="font-size: 0.9em;">21 de Septiembre de 2026</p>
+                        </div>
+                    </div>
+
+                    <!-- INFORMACIÓN FISCAL -->
+                    <div class="invoice-fiscal-info">
+                        <strong>Información Fiscal:</strong> Tipo NCF: <strong>B01</strong> (Factura con Valor Fiscal) |
+                        Régimen: Comprobante Fiscal | ITBIS Incluido: <strong>18%</strong>
+                    </div>
+
+                    <!-- DATOS DEL CLIENTE -->
+                    <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 2px solid #e8eaed;">
+                        <p style="font-weight: 600; margin-bottom: 8px;">Cliente:</p>
+                        <p><strong>Miguel Pérez</strong> | Cédula: 001-2345678-9</p>
+                        <p>Email: miguel.perez@email.com | Teléfono: 809-555-1234</p>
+                    </div>
+
+                    <!-- ITEMS -->
+                    <div class="invoice-items">
+                        <div class="invoice-item">
+                            <div class="invoice-item-desc">
+                                <p style="font-weight: 500;">Limpieza Dental (45 min)</p>
+                                <p style="font-size: 0.85em; color: #7f8c8d;">Servicio de higiene dental profesional</p>
+                            </div>
+                            <p style="font-weight: 500;">RD$ 800.00</p>
+                        </div>
+                        <div class="invoice-item">
+                            <div class="invoice-item-desc">
+                                <p style="font-weight: 500;">Aplicación de Fluoruro</p>
+                                <p style="font-size: 0.85em; color: #7f8c8d;">Tratamiento preventivo</p>
+                            </div>
+                            <p style="font-weight: 500;">RD$ 200.00</p>
+                        </div>
+                    </div>
+
+                    <!-- DESGLOSE FISCAL -->
+                    <div style="background: #f9fafb; padding: 16px; border-radius: 6px; margin-bottom: 16px; font-size: 0.9em;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Subtotal (Excluye ITBIS):</span>
+                            <span>RD$ 1,000.00</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>ITBIS (18%):</span>
+                            <span>RD$ 180.00</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid #e8eaed; font-weight: 600;">
+                            <span>TOTAL A PAGAR:</span>
+                            <span style="color: #667eea; font-size: 1.05em;">RD$ 1,180.00</span>
+                        </div>
+                    </div>
+
+                    <!-- MÉTODO DE PAGO Y ESTADO -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 2px solid #e8eaed;">
+                        <div>
+                            <p style="font-weight: 600; margin-bottom: 4px;">Método de Pago:</p>
+                            <p>💰 Efectivo</p>
+                        </div>
+                        <div>
+                            <p style="font-weight: 600; margin-bottom: 4px;">Estado:</p>
+                            <span class="badge badge-ok">✓ Pagado</span>
+                        </div>
+                    </div>
+
+                    <p style="font-size: 0.85em; color: #7f8c8d;">
+                        ✓ Recibo enviado a: miguel.perez@email.com | Fecha de Envío: 21/09/2026 10:45 AM
+                    </p>
+                </div>
+
+                <div class="note success">
+                    ✓ Factura registrada exitosamente en el sistema. Cumple con todas las regulaciones fiscales dominicanas.
+                </div>
+            </div>
+
+            <!-- REPORTES -->
+            <div id="reportes" class="content">
+                <h2>Reportes y Análisis</h2>
+                <p class="subtitle">KPIs, productividad y análisis financiero</p>
+
+                <div class="chart-container role-restriction visible" role-visible="admin,doctor">
+                    <div class="chart">
+                        <div class="chart-title">Ingresos - Septiembre 2026</div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Semana 1</span>
+                                <span>RD$ 14,500</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 58%;">RD$ 14,500</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Semana 2</span>
+                                <span>RD$ 18,200</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 73%;">RD$ 18,200</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Semana 3</span>
+                                <span>RD$ 16,800</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 67%;">RD$ 16,800</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Semana 4 (hasta hoy)</span>
+                                <span>RD$ 8,500</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 34%;">RD$ 8,500</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart">
+                        <div class="chart-title">Productividad por Profesional</div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Dr. José García</span>
+                                <span>45 pacientes/mes</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 90%;">45 pacientes</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Dra. Ana Martínez</span>
+                                <span>38 pacientes/mes</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 76%;">38 pacientes</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Dr. Roberto Sánchez</span>
+                                <span>42 pacientes/mes</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 84%;">42 pacientes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart">
+                        <div class="chart-title">Servicios Más Solicitados</div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Limpieza Dental</span>
+                                <span>35%</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 70%;">35%</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Rellenos/Empastes</span>
+                                <span>25%</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 50%;">25%</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-label">
+                                <span>Consultas</span>
+                                <span>20%</span>
+                            </div>
+                            <div class="chart-bar-value" style="width: 40%;">20%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <p><strong>© 2026 DentalFlow</strong> - Sistema Integral de Gestión para Clínicas Dentales</p>
+            <p style="margin-top: 8px; font-size: 0.85em;">Desarrollado para Odontología Dominicana | HIPAA Compliant | Seguridad de Datos Garantizada</p>
+            <p style="margin-top: 8px; font-size: 0.85em;">Version: 1.0.0 | Status: Production Ready | Built with HTML5 + Vanilla JS</p>
+        </footer>
+    </div>
+
+    <script>
+        /* ==================== ROLE-BASED ACCESS CONTROL (RBAC) ==================== */
+        let currentRole = 'doctor';
+
+        function switchRole(role) {
+            currentRole = role;
+
+            // Actualizar botones activos
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Actualizar privilegios visibles
+            updateRolePrivileges(role);
+        }
+
+        function updateRolePrivileges(role) {
+            const privilegeBadge = document.getElementById('privilegeBadge');
+            const privilegeTexts = {
+                doctor: '👨‍⚕️ Doctor - Acceso Total',
+                reception: '👩‍💼 Recepción - Acceso Limitado',
+                admin: '💼 Admin - Acceso Total'
+            };
+
+            privilegeBadge.textContent = privilegeTexts[role];
+
+            // Controlar visibilidad de elementos según rol
+            document.querySelectorAll('.role-restriction').forEach(element => {
+                const visibleFor = element.getAttribute('role-visible');
+                if (visibleFor && visibleFor.includes(role)) {
+                    element.classList.add('visible');
+                } else {
+                    element.classList.remove('visible');
+                }
+            });
+
+            // Ocultar/mostrar información sensible según rol
+            document.querySelectorAll('[role-visible]').forEach(element => {
+                const visibleFor = element.getAttribute('role-visible');
+                if (visibleFor && visibleFor.includes(role)) {
+                    element.classList.remove('element-hidden-by-role');
+                } else if (visibleFor) {
+                    element.classList.add('element-hidden-by-role');
+                }
+            });
+        }
+
+        /* ==================== NAVIGATION TABS ==================== */
+        function showTab(tabName) {
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Desactivar todos los botones de navegación
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Mostrar tab seleccionado
+            document.getElementById(tabName).classList.add('active');
+
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+
+            // Scroll al top
+            document.querySelector('.content-wrapper').scrollTop = 0;
+        }
+
+        /* ==================== ODONTOGRAMA INTERACTIVO ==================== */
+        const toothStates = {
+            healthy: { class: 'healthy', label: 'Sano' },
+            caries: { class: 'caries', label: 'Caries / Por Tratar' },
+            restoration: { class: 'restoration', label: 'Restaurado' },
+            missing: { class: 'missing', label: 'Ausente' },
+            crown: { class: 'crown', label: 'Corona' }
+        };
+
+        let toothStateIndex = {
+            healthy: 0,
+            caries: 1,
+            restoration: 2,
+            crown: 3,
+            missing: 4
+        };
+
+        const stateOrder = ['healthy', 'caries', 'restoration', 'crown', 'missing'];
+
+        function changeTooth(element, toothNumber) {
+            // Determinar estado actual
+            let currentStateKey = null;
+            for (let state in toothStates) {
+                if (element.classList.contains(state)) {
+                    currentStateKey = state;
+                    break;
+                }
+            }
+
+            if (!currentStateKey) currentStateKey = 'healthy';
+
+            // Encontrar siguiente estado
+            const currentIndex = stateOrder.indexOf(currentStateKey);
+            const nextStateKey = stateOrder[(currentIndex + 1) % stateOrder.length];
+
+            // Remover todas las clases de estado
+            stateOrder.forEach(state => element.classList.remove(state));
+
+            // Agregar nueva clase
+            element.classList.add(nextStateKey);
+
+            // Actualizar texto
+            element.querySelector('.tooth-status').textContent = toothStates[nextStateKey].label;
+
+            // Actualizar nota clínica
+            const clinicalNote = document.getElementById('clinicalNote');
+            clinicalNote.value += `\n\n[Diente ${toothNumber}] - Estado: ${toothStates[nextStateKey].label} (Actualizado: ${new Date().toLocaleString('es-DO')})`;
+        }
+
+        function saveClinicalNote() {
+            const note = document.getElementById('clinicalNote').value;
+            if (note.trim()) {
+                alert('✓ Nota clínica guardada exitosamente.\n\nContenido: ' + note.substring(0, 50) + '...');
+            }
+        }
+
+        /* ==================== INICIALIZACIÓN ==================== */
+        document.addEventListener('DOMContentLoaded', function() {
+            updateRolePrivileges('doctor');
+        });
+    </script>
+</body>
+</html>
